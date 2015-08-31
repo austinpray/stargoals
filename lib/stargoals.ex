@@ -107,7 +107,7 @@ defmodule Stargoals.Chat do
       false
   """
   def getting_close?(starCount, goalCount) do
-    interesting = starCount >= (goalCount * 0.9975) && starCount <= goalCount
+    starCount >= (goalCount * 0.9975) && starCount <= goalCount
   end
 
   defp webhook do
