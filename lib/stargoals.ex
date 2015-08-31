@@ -5,10 +5,6 @@ defmodule Stargoals do
   use Application
 
   def start(_type, _args) do
-    start_link()
-  end
-
-  def start_link do
     {:ok, bucket} = StarKeeper.start_link
     StarKeeper.put(bucket, :interval, :timer.minutes(1))
     Task.start_link(fn -> loop(bucket) end)
@@ -27,6 +23,13 @@ defmodule Stargoals do
     StarKeeper.get(bucket, :gh)
   end
 
+  @doc ~S"""
+  Parses GitHub repo response and sums the stars
+
+  ## Example
+      iex> Stargoals.calc_stars([%{stargazers_count: 1}, %{stargazers_count: 2}])
+      3
+  """
   def calc_stars(repos) do
     List.foldl(repos, 0, fn(el, acc) -> Dict.get(el, "stargazers_count", 0) + acc end)
   end
@@ -35,6 +38,8 @@ defmodule Stargoals do
     stars = fn -> get_stars(bucket) end
     next = fn -> loop(bucket) end
     interval = fn -> StarKeeper.get(bucket, :interval) end
+
+    prevStars = stars.()
 
     case GitHub.get("/orgs/roots/repos") do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -45,12 +50,15 @@ defmodule Stargoals do
         IO.inspect reason
     end
 
-    IO.puts("Current Star Count: " <> to_string(stars.()))
-    if Chat.getting_close? stars.(), 10000 do
+    starCountIsInteresting = Chat.getting_close? stars.(), 10000
+    starCountHasChanged = prevStars !== stars.()
+
+    if starCountIsInteresting && starCountHasChanged do
       Chat.get_message stars.(), 10000
       |> Chat.send_to_slack
     end
     # TODO: add hourly checkin
+    IO.puts("Current Star Count: " <> to_string(stars.()))
     :timer.sleep(interval.())
     next.()
   end
