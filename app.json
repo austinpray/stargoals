@@ -1,0 +1,13 @@
+{
+  "name": "Stargoals",
+  "description": "whatches your org's stars",
+  "keywords": [],
+  "addons": [],
+  "env": {
+    "GH_TOKEN": {"description": "github oauth token"},
+    "SLACK_WEBHOOK: {"description": "webhook to call"}
+  },
+  "buildpacks": [
+    {"url": "https://github.com/HashNuke/heroku-buildpack-elixir.git"}
+  ]
+}
