@@ -19,10 +19,6 @@ defmodule Stargoals do
     StarKeeper.put(bucket, :stars, stars)
   end
 
-  def get_gh_client(bucket) do
-    StarKeeper.get(bucket, :gh)
-  end
-
   @doc ~S"""
   Parses GitHub repo response and sums the stars
 
