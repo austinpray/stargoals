@@ -1,1 +1,1 @@
-web: mix run --no-halt --permanent
+worker: mix run --no-halt --permanent
