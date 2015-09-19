@@ -3,8 +3,8 @@ Stargoals
 
 ## Env Variables
 
-`GH_TOKEN`: Needs a github token
-`SLACK_WEBHOOK`: slack webhook
+* `GH_TOKEN`: Needs a github token
+* `SLACK_WEBHOOK`: slack webhook
 
 ## Todo
 
