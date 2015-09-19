@@ -50,7 +50,7 @@ defmodule Stargoals do
     starCountHasChanged = prevStars !== stars.()
 
     if starCountIsInteresting && starCountHasChanged do
-      Chat.get_message stars.(), 10000
+      Chat.get_message(stars.(), 10000)
       |> Chat.send_to_slack
     end
     # TODO: add hourly checkin
@@ -65,6 +65,9 @@ defmodule Stargoals.Chat do
   Chats the correct message for a goal
 
   ## Examples
+      iex> Stargoals.Chat.get_message 9975, 10000
+      "25 more stars to go!"
+
       iex> Stargoals.Chat.get_message 9999, 10000
       "1 more star to go!"
 
